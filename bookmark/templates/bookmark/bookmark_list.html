@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bookmark_list</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Bookmark List{% endblock %}
+
+{% block content %}
     <div class="btn-group">
         <a href="{% url 'add' %}" class="btn btn-info">Add Bookmark</a>
     </div>
@@ -33,6 +29,37 @@
             {% endfor %}
         </tbody>
     </table>
-    
-</body>
-</html>
+
+
+{% block pagination %}
+    {% if is_paginated %}
+        <ul class="pagination justify-content-center pagination-sm">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'list' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for object in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == forloop.counter %}disabled{% endif %}">
+                    <a class="page-link" href="{{ request.path }}?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'list' %}?page={{ page_obj.next_page_number }}">NEXT</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">NEXT</a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock %}
+{% endblock %}
